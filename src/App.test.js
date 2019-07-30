@@ -1,9 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import { cleanup, render, fireEvent } from "@testing-library/react";
+import App from "./App";
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+afterEach(cleanup);
+
+it("changes via getByLabelText", () => {
+  const { getByLabelText, getByDisplayValue } = render(<App />);
+  const selectElement = getByLabelText("Fruit");
+  fireEvent.change(selectElement, { target: { value: "grapefruit" } });
+  // assert value
+  expect(selectElement.value).toBe("grapefruit");
+  // assert text
+  getByDisplayValue("Grapefruit");
+});
+
+it("changes via getByPlaceholderText", () => {
+  const { getByPlaceholderText, getByDisplayValue } = render(<App />);
+  const selectElement = getByPlaceholderText("select a fruit");
+  fireEvent.change(selectElement, { target: { value: "coconut" } });
+  // assert value
+  expect(selectElement.value).toBe("coconut");
+  // assert text
+  getByDisplayValue("Coconut");
 });
